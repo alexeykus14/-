@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+<div>
+    {% if worker_resume %}
+    <div class="grid grid-cols-2">
+        <div class="border border-teal-400 rounded-xl py-2 px-2">
+            <h1 class="font-semibold text-2xl mb-2">{{ worker_resume.name }} {{ worker_resume.lastname }} {{ worker_resume.surname }}</h1>
+            <img width="150" height="150" src="{{ worker_resume.profile_photo.url }}" class="rounded-3xl">
+        </div>
+        <div class="border border-teal-400 rounded-xl py-2 px-2">
+            <h1 class="font-semibold text-2xl">{{ worker_resume.profession }}</h1>
+            <h1 class="font-semibold text-xl">{{ worker_resume.age }} лет</h1>
+            <h2>Опыт: {{ worker_resume.experience }}</h2>
+            <h2>Образование: {{ worker_resume.education }}</h2>
+            <p>Номер телефона: {{ worker_resume.phone_number }}</p>
+            <p>Email: {{ worker_resume.email }}</p>
+            <h1 class="text-gray-400 mb-2">Профиль заполнен {{ worker_resume.date|date:"d.m Y года."}}</h1>
+            {% if worker_resume.portfolio %}
+            <a href="{{ worker_resume.portfolio.url }}" download="{{ worker_resume.name }}">
+                <button class="rounded-2xl py-2 px-4 bg-gray-500 text-white hover:bg-gray-300">Скачать портфолио</button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="border border-teal-400 rounded-xl py-2 px-2 max-w-full mb-4">
+        <h1 class="font-semibold text-2xl">Описание</h1>
+        <p>{{ worker_resume.description }}</p>
+    </div>
+    <a href="{% url 'edit_worker_resume' %}">
+        <button class="mb-2 rounded-2xl bg-teal-700 text-white py-2 px-4 hover:bg-teal-200">Редактировать профиль
+        </button>
+    </a>
+    {% elif employeer_resume %}
+    <h1 class="font-semibold text-2xl mb-2">{{ employeer_resume.organization_name }}</h1>
+    <div>
+        <img class="rounded-3xl" src="{{ employeer_resume.profile_photo.url }}">
+    </div>
+    <h1><strong>Email: </strong>{{ employeer_resume.email }}</h1>
+    <h1><strong>Номер телефона: </strong>{{ employeer_resume.phone_number }}</h1>
+    <h1 class="text-gray-400 mb-4">Профиль заполнен {{ employeer_resume.date|date:"d.m Y года."}}</h1>
+    <a href="{% url 'edit_employeer_resume' %}">
+        <button class="mb-4 rounded-2xl bg-teal-700 text-white py-2 px-4 hover:bg-teal-200">Редактировать профиль
+        </button>
+    </a>
+    <h1 class="mb-4 font-semibold text-2xl">Ваши объявления</h1>
+    <div class="grid grid-cols-2 gap-3">
+        {% for offer in offers %}
+        <div>
+            <a href="{% url 'offer_detail' offer.id %}">
+                <div class="border border-gray-700 p-6 bg-white rounded-xl hover:bg-teal-200">
+                    <h1 class="text-2xl">{{ offer.job_title }}</h1>
+                    <p class="text-gray-500">{{ offer.date|date:"d/m Y H:i"}}</p>
+                    <h2 class="text-black-500 font-semibold mb-4">Зарплата: {{ offer.salary }} ₽</h2>
+                    <p class="text-gray-500">{{ offer.description }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h1 class="mb-2">Заполните резюме, чтобы создавать и просматривать объявления.</h1>
+    <a href="{% url 'create_employeer_resume' %}">
+        <button class="mb-4 bg-white text-teal-500 border border-teal-500 rounded-2xl hover:bg-teal-200">
+            <h1 class="py-2 px-4">Я работодатель</h1>
+        </button>
+    </a>
+    <a href="{% url 'create_worker_resume' %}">
+        <button class="mb-4 bg-white text-teal-500 border border-teal-500 rounded-2xl hover:bg-teal-200">
+            <h1 class="py-2 px-4">Я ищу работу</h1>
+        </button>
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

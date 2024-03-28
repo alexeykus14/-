@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Создайте учетную запись{% endblock %}
+
+{% block content %}
+<div>
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="inline-block mb-2"><strong>Имя пользователя</strong></label><br>
+            {{ form.username }}
+        </div>
+
+        <div class="mb-3">
+            <label class="inline-block mb-2"><strong>Пароль</strong></label><br>
+            {{ form.password1 }}
+            <p>{{ form.password1.help_text }}</p>
+        </div>
+        <div class="mb-3 border-teal-900">
+            <label class="inline-block mb-2"><strong>Подтвердите пароль</strong></label><br>
+            {{ form.password2 }}
+            <p class="py-6">{{ form.password2.help_text }}</p>
+        </div>
+        <div class="mb-3">
+            {% if form.errors %}
+            <strong>Форма заполнена неверно</strong>
+            {% for field in form %}
+            <h1 class="text-red-700 font-semibold">{{ field.errors }}</h1>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="rounded-2xl py-2 px-4 text-white bg-teal-400 hover:bg-teal-700">Подтвердить
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

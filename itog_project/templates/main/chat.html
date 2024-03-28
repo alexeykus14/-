@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Чат с {{ user2.username }}{% endblock %}
+
+{% block content %}
+<div class="px-32">
+    <h1 class="text-black-900 font-bold mb-4">Чат с <a href="{% url 'user_profile' user2.id %}">{{ user2.username }}</a></h1>
+    {% for message in messages %}
+    {% if message.sender == request.user %}
+        <p class='border border-teal-600 rounded-2xl px-4' align="right">
+            <strong class="mb-16" align="right">{{ request.user.username }}</strong><br>
+            {{ message.text }}
+            {% if message.image %}
+            <img src="{{ message.image.url }}" class="w-1/2 h-1/2 rounded-2xl py-2 px-2">
+            {% endif %}
+        </p>
+
+    {% else %}
+    <p align="left" class="border border-gray-700 rounded-2xl px-4">
+        <strong class="mb-16" align="left">{{ user2.username }}</strong><br>
+        {{ message.text }}
+        {% if message.image %}
+        <img src="{{ message.image.url }}" class="w-1/2 h-1/2 rounded-2xl py-2 px-2">
+        {% endif %}
+    </p>
+    {% endif %}
+    {% endfor %}
+
+    {% if unread_messages %}
+    <h1 class="text-gray-700 mb-4 font-semibold">Непрочитанные сообщения</h1>
+    {% endif %}
+
+    {% for unread_message in unread_messages %}
+    <p align="left" class="border border-gray-700 rounded-2xl px-4">
+        <strong class="mb-16" align="left">{{ user2.username }}</strong><br>
+        {{ unread_message.text }}
+        {% if unread_message.image %}
+        <img src="{{ unread_message.image.url }}" class="w-1/2 h-1/2 rounded-2xl py-2 px-2">
+        {% endif %}
+    </p>
+    {% endfor %}
+</div>
+<div>
+    <form action="{% url 'chat' user2.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div align="right" class="px-32 mt-4">
+            <strong>Новое сообщение</strong>
+            <div>
+                {{ form.text }}
+                {{ form.image }}
+            </div>
+
+            <button type="submit" class="mt-12 bg-teal-400 px-4 py-2 rounded-2xl">Отправить</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

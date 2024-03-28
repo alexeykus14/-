@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Просмотр вакансий{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+    <h1 class="h-11 font-bold font-size-32">Здравствуйте, {{ user.username }}</h1>
+{% endif %}
+<div class="px-6 py-6">
+    <form action="{% url 'search' %}" method="post">
+        {% csrf_token %}
+        <input type="search" name="search" placeholder="Поиск по названию"
+               class="w-11/12 py-4 px-6 rounded-xl border mb-2 text-gray-500">
+        <button type="submit" class="py-2 px-4 rounded-2xl bg-teal-500 text-white hover:bg-teal-700">Подтвердить</button>
+    </form>
+    <form action="{% url 'sorting' %}" method="post">
+        {% csrf_token %}
+        <label class="font-semibold mb-4 text-black-900">Сортировать по: </label>
+        <select name="sorting">
+            <option value="date">По дате</option>
+            <option value="apply">По откликам</option>
+            <option value="salary">По зарплате</option>
+        </select>
+        <button type="submit">Сортировать</button>
+    </form>
+</div>
+<div class="px-6 mb-4 grid grid-cols-2 gap-3">
+    {% for offer in offers %}
+    <div>
+        <a href="{% url 'offer_detail' offer.id %}">
+
+            <div class="border border-gray-700 p-6 bg-white rounded-xl hover:bg-teal-200">
+                <h1 class="text-2xl">{{ offer.job_title }}</h1>
+                <p class="text-gray-400 mb-4">👤{{ offer.owner.username }}</p>
+                <h2 class="text-black-500 font-semibold mb-4">Зарплата: {{ offer.salary }} ₽</h2>
+                <p class="text-gray-500">{{ offer.description }}</p>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

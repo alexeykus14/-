@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Анкета {{ offer.owner.username }}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl">{{ offer.job_title }}</h1>
+<a href="{% url 'user_profile' offer.owner.id %}">
+    <p class="text-gray-500 mb-4 hover:text-gray-700">👤{{ offer.owner.username }}</p>
+</a>
+
+<h2 class="text-black-500 font-semibold mb-4">Зарплата: {{ offer.salary }} ₽</h2>
+<p class="text-gray-500">{{ offer.date|date:"d/m Y H:i"}}</p>
+<p class="text-gray-500 mb-4">{{ offer.description }}</p>
+{% if request.user == offer.owner %}
+<a href="{% url 'edit_offer' offer.id %}">
+    <button class="rounded-2xl bg-teal-400 py-2 px-4 hover:bg-teal-700">Редактировать</button>
+</a>
+<a href="{% url 'delete_offer' offer.id %}">
+    <button class="rounded-2xl bg-red-400 py-2 px-4 hover:bg-red-700">Удалить</button>
+</a>
+{% else %}
+<a href="{% url 'apply' offer.id %}">
+    <button class="border rounded-2xl bg-teal-400 hover:bg-teal-700">
+        <h2 class="px-4 py-2 text-white font-semibold text-lg">Откликнуться</h2>
+    </button>
+</a>
+{% endif %}
+{% endblock %}

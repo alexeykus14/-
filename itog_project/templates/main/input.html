@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Входящие{% endblock %}
+
+{% block content %}
+
+<div class="border border-gray-400 px-2 py-2 rounded-2xl mb-4">
+    {% if not inbox %}
+    <h1 class="text-black-900 font-bold">У вас нет непрочитанных сообщений.</h1>
+    {% else %}
+    <h1 class='text-black-900 font-bold mb-4'>Непрочитанные сообщения</h1>
+    {% endif %}
+    {% for sender, msg_cnt in inbox.items %}
+    <div class="border border-teal-600 rounded-2xl px-4 py-4">
+        <h1 class="text-black-900 font-semibold">{{ sender.username }}</h1>
+        <h2 class="mb-4">{{ msg_cnt }}</h2>
+        <a href="{% url 'chat' sender.id %}">
+            <button class="bg-teal-400 py-2 px-2 hover:bg-teal-200 rounded-2xl">Перейти к чату</button>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="border border-gray-400 px-2 py-2 rounded-2xl">
+    <h1 class="text-gray-900 font-bold mb-4">Чаты</h1>
+    {% for user, msg in all_chats_with_last_msgs %}
+    <div class="border border-teal-600 rounded-2xl px-4 py-4">
+        <h1 class="text-black-900 font-semibold mb-2">{{ user.username }}</h1>
+        <p class="text-gray-900 mb-4">{{ msg.text }}</p>
+        <a href="{% url 'chat' user.id %}">
+            <button class="bg-teal-400 py-2 px-2 hover:bg-teal-200 rounded-2xl">Перейти к чату</button>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
